@@ -75,6 +75,10 @@ namespace ZMS3Sync
 
                     var resp = S3Client.PutObjectAsync(request);
                   
+                    if(!String.IsNullOrEmpty(U.config["TO_ADDDRESS"]))
+                    {
+                        SendSESEmail.sendMail("Alarm",filepath);
+                    }
                     resp.Wait();
 
                    
