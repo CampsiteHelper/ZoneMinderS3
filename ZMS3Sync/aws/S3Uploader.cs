@@ -37,6 +37,7 @@ namespace ZMS3Sync
                 }
                    
             }
+            S3Client = new AmazonS3Client(endPoint);
 
 
         }
@@ -51,12 +52,10 @@ namespace ZMS3Sync
         public void uploadFile(string filepath, string s3path)
         {
 
-            IAmazonS3 client;
-
+           
             var fname = Path.GetFileName(filepath);
 
-            client = new AmazonS3Client(endPoint);
-
+        
             var request = new PutObjectRequest()
             {
                 BucketName = bucket,
@@ -74,7 +73,7 @@ namespace ZMS3Sync
 
                     U.log($"Uploading {filepath}", "uploadFile");
 
-                    var resp = client.PutObjectAsync(request);
+                    var resp = S3Client.PutObjectAsync(request);
                   
                     resp.Wait();
 
