@@ -44,6 +44,7 @@ namespace ZMS3Sync
 
             var sleepMs = Convert.ToInt32(sleepSecs) * 1000;
 
+            var lastNotifyTime = DateTime.Now.AddDays(-1);
 
             using (MySqlConnection connReader = new MySqlConnection(U.config["MySqlConnection"]))
             using (MySqlConnection connWriter = new MySqlConnection(U.config["MySqlConnection"]))
@@ -66,7 +67,13 @@ namespace ZMS3Sync
                     try
                     {
                         MySqlCommand cmd = new MySqlCommand(U.config["ZMQuery"], connReader);
-                        U.log("Checking for new events");
+                        //occassionally write out that we're running..
+                        if ((DateTime.Now - lastNotifyTime).TotalSeconds > 120)
+                        {
+                            U.log("Checking for new events");
+                            lastNotifyTime = DateTime.Now;
+
+                        }
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -82,6 +89,8 @@ namespace ZMS3Sync
                                         var s3Key = e.monitorName + "/" + e.starttime.ToString("s");
                                         //fire and forget here..
                                         upl.uploadFile(img.fpath, s3Key);
+
+                                        // update to mark them as uploaded
                                         var sql = $"insert alarm_uploaded (frameid,upload_timestamp,eventid) values ( {e.frameID}, CURRENT_TIMESTAMP, {img.eventId})";
                                         MySqlCommand insertCmd = new MySqlCommand(sql, connWriter);
                                         var rowsAffected = insertCmd.ExecuteNonQuery();

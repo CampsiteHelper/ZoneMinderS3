@@ -10,6 +10,9 @@ namespace ZMS3Sync
     public class S3Uploader
     {
         IAmazonS3 S3Client { get; set; }
+        static TaskFactory factory { get; set; }
+
+        static Object lockObj = new object();
 
         string bucket;
         Amazon.RegionEndpoint endPoint;
@@ -19,15 +22,38 @@ namespace ZMS3Sync
 
             endPoint = Amazon.RegionEndpoint.GetBySystemName(Region);
             bucket = Bucket;
+            var maxConcur = U.config["MaxConcurrentUploads"] ?? "10";
+
+            maxconcurrency = Convert.ToInt32(maxConcur);
+
+
+            //set up the limited concurrency
+            lock (lockObj)
+            {
+                if (factory == null)
+                {
+                    LimitedConcurrencyLevelTaskScheduler lcts = new LimitedConcurrencyLevelTaskScheduler(maxconcurrency);
+                    factory = new TaskFactory(lcts);
+                }
+                   
+            }
+
 
         }
 
+        static int maxconcurrency = 10;
+
+
+
+
+
+
         public void uploadFile(string filepath, string s3path)
         {
-            
+
             IAmazonS3 client;
 
-            var fname =  Path.GetFileName(filepath);
+            var fname = Path.GetFileName(filepath);
 
             client = new AmazonS3Client(endPoint);
 
@@ -37,32 +63,40 @@ namespace ZMS3Sync
                 Key = s3path + "/" + fname,
                 FilePath = filepath,
                 StorageClass = S3StorageClass.StandardInfrequentAccess
-           };
+            };
 
 
-
-            Task.Factory.StartNew(()=>{
+            factory.StartNew(() =>
+            {
                 try
                 {
-                    U.log($"Uploading {filepath}","uploadFile");
                     
-                   var resp =  client.PutObjectAsync(request);
+
+                    U.log($"Uploading {filepath}", "uploadFile");
+
+                    var resp = client.PutObjectAsync(request);
+                  
                     resp.Wait();
-                    if(resp.Result.HttpStatusCode!=System.Net.HttpStatusCode.OK)
+
+                   
+
+                    if (resp.Result.HttpStatusCode != System.Net.HttpStatusCode.OK)
                     {
                         U.log($"Error {resp.Result.HttpStatusCode} with request ");
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
-                    U.log("Error in uploadFile",e,"uploadFile");
+                    
+                    U.log("Error in uploadFile", e, "uploadFile");
                 }
+              
 
 
             });
 
 
-         }
+        }
 
 
 
