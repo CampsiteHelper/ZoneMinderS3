@@ -9,12 +9,8 @@ namespace ZMS3Sync
         static int Main(string[] args)
         {
 
-           // U.log("hi my name is jaiden");
-            //return 0;
-
+      
             U.log("Starting up and getting configuration");
-
-           
 
             U.initConfig();
 
@@ -37,8 +33,7 @@ namespace ZMS3Sync
 
             var rv = true;
 
-            ZoneMinderEvent.createTableIfNotExists();
-
+         
             if(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID")))
             {
                 U.log("ERROR - No AWS_ACCESS_KEY_ID environment value set");

@@ -16,4 +16,9 @@
     <Folder Include="aws\" />
     <Folder Include="zm\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Link>README.md</Link>
+    </None>
+  </ItemGroup>
 </Project>

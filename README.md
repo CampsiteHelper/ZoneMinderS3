@@ -28,8 +28,8 @@ AWS_ACCESS_KEY_ID | You AWS access key - This is optional if you've set this sam
 
 6) Run it
 
-    -dotnet restore
-    -dotnet run & 
+    dotnet restore
+    dotnet run & 
 
 7) Daemonize it so it runs at start up - See the internets for how to daemonize dotnet core on your distro.
 
