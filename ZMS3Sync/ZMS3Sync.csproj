@@ -5,4 +5,15 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.3.16.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0" />
+    <PackageReference Include="MySql.Data" Version="6.10.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="aws\" />
+    <Folder Include="zm\" />
+  </ItemGroup>
 </Project>
