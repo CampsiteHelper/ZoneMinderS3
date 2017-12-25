@@ -25,7 +25,7 @@ ImgBasePath | The path you have set in zoneminder for where images go
 S3Region | The region name where your s3 bucket is.
 AWS_SECRET_ACCESS_KEY | Your secret AWS key - or alternatively and safer.. set this ENV variable
 AWS_ACCESS_KEY_ID | You AWS access key - or alternatively and safer.. set this ENV variable
-n/a | The next five are optional if you want to send an email with images to yourself through SES (or any smtp server..)
+|| The next five are optional if you want to send an email with images to yourself through SES (or any smtp server..)
 AWS_SES_USERNAME | SMTP Server username
 AWS_SES_PWD | SMTP Server password
 AWS_SES_SMTP | SMTP Server host name
