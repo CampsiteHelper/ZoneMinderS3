@@ -35,6 +35,7 @@ TO_ADDDRESS | email to address
 6) Run it
 
     dotnet restore
+
     dotnet run & 
 
 7) Daemonize it so it runs at start up - See the internets for how to daemonize dotnet core on your distro.
