@@ -61,8 +61,14 @@ namespace ZMS3Sync
                 BucketName = bucket,
                 Key = s3path + "/" + fname,
                 FilePath = filepath,
-                StorageClass = S3StorageClass.StandardInfrequentAccess
+                StorageClass = S3StorageClass.StandardInfrequentAccess,
+
+
             };
+
+
+
+
 
 
             factory.StartNew(() =>
@@ -71,7 +77,7 @@ namespace ZMS3Sync
                 {
                     
 
-                    U.log($"Uploading {filepath}", "uploadFile");
+                    U.log($"Uploading {filepath} to s3://{request.Key}", "uploadFile" );
 
                     var resp = S3Client.PutObjectAsync(request);
                   

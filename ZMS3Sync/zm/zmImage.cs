@@ -27,8 +27,8 @@ namespace ZMS3Sync
 
             var monitorName = evnt.monitorName;
 
-            /* get a two digit year for the file path */
-            var tYear = dtFrame.Year.ToString().Substring(3);
+            /* get a two digit year for the file path this will fail in the year 100000 */
+            var tYear = (dtFrame.Year % 1000).ToString().PadLeft(2,'0');
             var tMonth = dtFrame.Month.ToString().PadLeft(2, '0');
             var tDay = dtFrame.Day.ToString().PadLeft(2, '0');
             var tHour = dtFrame.Hour.ToString().PadLeft(2, '0');
