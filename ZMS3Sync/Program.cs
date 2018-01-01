@@ -56,11 +56,20 @@ namespace ZMS3Sync
             if (string.IsNullOrEmpty(U.config["S3Bucket"]))
             {
                 U.log("ERROR - No S3Bucket config value set");
-                rv = false;
+                return false;
 
             }
 
-            return rv;
+
+            if (!rv)
+                return false;
+
+
+
+            ///finally preflight
+            var s3u = new S3Uploader(U.config["S3Region"], U.config["S3Bucket"]);
+
+            return s3u.preflight();
 
 
 

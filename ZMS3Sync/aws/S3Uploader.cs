@@ -44,6 +44,66 @@ namespace ZMS3Sync
 
         static int maxconcurrency = 10;
 
+        public bool preflight()
+        {
+
+            var path = Path.GetTempFileName();
+
+            var sw = File.CreateText(path);
+
+            sw.WriteLine("Hello Testing");
+            sw.Close();
+
+            var request = new PutObjectRequest()
+            {
+                BucketName = bucket,
+                Key = "test.txt",
+                FilePath = path,
+                StorageClass = S3StorageClass.StandardInfrequentAccess,
+
+
+            };
+
+
+            try
+                {
+                    
+
+                U.log($"preflight testing s3 -  upload of {path} to s3://test.txt", "preflight" );
+
+                    var resp = S3Client.PutObjectAsync(request);
+                  
+                    resp.Wait();
+
+                   
+
+                    if (resp.Result.HttpStatusCode != System.Net.HttpStatusCode.OK)
+                    {
+                        U.log($"Error {resp.Result.HttpStatusCode} with request ");
+                    return false;
+
+                    }
+
+             
+                }
+                catch (Exception e)
+                {
+                    
+                    U.log("Error in uploadFile", e, "uploadFile");
+                return false;
+
+                }
+
+            U.log("Preflight succeeded");
+
+            return true;
+
+
+
+
+
+
+        }
 
 
 
@@ -65,9 +125,6 @@ namespace ZMS3Sync
 
 
             };
-
-
-
 
 
 
