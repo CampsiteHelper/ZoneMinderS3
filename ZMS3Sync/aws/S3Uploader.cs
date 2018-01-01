@@ -40,7 +40,11 @@ namespace ZMS3Sync
 
             U.log($"Creating s3 client to endpoint {endPoint.DisplayName}");
 
-            S3Client = new AmazonS3Client(endPoint);
+            var cred  = new BasicAWSCredentials(Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"), Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY"));
+
+
+            S3Client = new AmazonS3Client(cred,endPoint);
+
 
 
 
