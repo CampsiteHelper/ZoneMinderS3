@@ -35,16 +35,15 @@ namespace ZMS3Sync
                     LimitedConcurrencyLevelTaskScheduler lcts = new LimitedConcurrencyLevelTaskScheduler(maxconcurrency);
                     factory = new TaskFactory(lcts);
                 }
-                   
+
             }
 
             U.log($"Creating s3 client to endpoint {endPoint.DisplayName}");
 
-            var cred  = new BasicAWSCredentials(Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"), Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY"));
+            var cred = new BasicAWSCredentials(Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"), Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY"));
 
 
-            S3Client = new AmazonS3Client(cred,endPoint);
-
+            S3Client = new AmazonS3Client(cred, endPoint);
 
 
 
@@ -72,35 +71,47 @@ namespace ZMS3Sync
 
             };
 
-
+            var resp = S3Client.PutObjectAsync(request);
             try
+            {
+
+
+                U.log($"preflight testing s3 -  upload of {path} to s3://test.txt", "preflight");
+
+
+
+                resp.Wait();
+
+
+
+                if (resp.Result.HttpStatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    
-
-                U.log($"preflight testing s3 -  upload of {path} to s3://test.txt", "preflight" );
-
-                    var resp = S3Client.PutObjectAsync(request);
-                  
-                    resp.Wait();
-
-                   
-
-                    if (resp.Result.HttpStatusCode != System.Net.HttpStatusCode.OK)
-                    {
-                        U.log($"Error {resp.Result.HttpStatusCode} with request ");
+                    U.log($"Error {resp.Result.HttpStatusCode} with request ");
                     return false;
 
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                U.log("Error in uploadFile", e, "uploadFile");
+                if (resp != null && resp.Result!=null)
+                {
+                    if(resp.Result.ResponseMetadata!=null && resp.Result.ResponseMetadata.Metadata.Count >0)
+                    {
+                        foreach(var rm in resp.Result.ResponseMetadata.Metadata)
+                        {
+                            U.log($"key: {rm.Key} val: {rm.Value})");
+                            
+                        }
+                            
                     }
 
-             
                 }
-                catch (Exception e)
-                {
-                    
-                    U.log("Error in uploadFile", e, "uploadFile");
                 return false;
 
-                }
+            }
 
             U.log("Preflight succeeded");
 
@@ -120,10 +131,10 @@ namespace ZMS3Sync
         public void uploadFile(string filepath, string s3path)
         {
 
-           
+
             var fname = Path.GetFileName(filepath);
 
-        
+
             var request = new PutObjectRequest()
             {
                 BucketName = bucket,
@@ -140,19 +151,19 @@ namespace ZMS3Sync
             {
                 try
                 {
-                    
 
-                    U.log($"Uploading {filepath} to s3://{request.Key}", "uploadFile" );
+
+                    U.log($"Uploading {filepath} to s3://{request.Key}", "uploadFile");
 
                     var resp = S3Client.PutObjectAsync(request);
-                  
-                    if(!String.IsNullOrEmpty(U.config["TO_ADDDRESS"]))
+
+                    if (!String.IsNullOrEmpty(U.config["TO_ADDDRESS"]))
                     {
-                        SendSESEmail.sendMail("Alarm",filepath);
+                        SendSESEmail.sendMail("Alarm", filepath);
                     }
                     resp.Wait();
 
-                   
+
 
                     if (resp.Result.HttpStatusCode != System.Net.HttpStatusCode.OK)
                     {
@@ -161,10 +172,10 @@ namespace ZMS3Sync
                 }
                 catch (Exception e)
                 {
-                    
+
                     U.log("Error in uploadFile", e, "uploadFile");
                 }
-              
+
 
 
             });
