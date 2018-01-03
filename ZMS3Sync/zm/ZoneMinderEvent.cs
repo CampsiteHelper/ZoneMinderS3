@@ -88,7 +88,7 @@ namespace ZMS3Sync
                                     {
 
 
-                                        var s3Key = $"{e.monitorName}/{e.starttime.Year}/{e.starttime.Month.ToString().PadRight(2, '0')}/{e.starttime.Day.ToString().PadRight(2, '0')}/{e.starttime.Hour.ToString().PadRight(2, '0')}-{e.starttime.Minute.ToString().PadRight(2, '0')}";
+                                        var s3Key = $"{e.monitorName}/{e.starttime.Year}/{e.starttime.Month.ToString().PadLeft(2, '0')}/{e.starttime.Day.ToString().PadLeft(2, '0')}/{e.starttime.Hour.ToString().PadLeft(2, '0')}-{e.starttime.Minute.ToString().PadLeft(2, '0')}";
 
 
 
