@@ -86,7 +86,12 @@ namespace ZMS3Sync
                                 {
                                     try
                                     {
-                                        var s3Key = e.monitorName + "/" + e.starttime.ToString("s");
+
+
+                                        var s3Key = $"{e.monitorName}/{e.starttime.Year}/{e.starttime.Month.ToString().PadRight(2, '0')}/{e.starttime.Day.ToString().PadRight(2, '0')}/{e.starttime.Hour.ToString().PadRight(2, '0')}-{e.starttime.Minute.ToString().PadRight(2, '0')}";
+
+
+
                                         //fire and forget here..
                                         upl.uploadFile(img.fpath, s3Key);
 

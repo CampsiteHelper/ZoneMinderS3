@@ -31,20 +31,27 @@ namespace ZMS3Sync
         public static void initConfig()
         {
 
-            var builder = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-
-             config = builder.Build();
-
-            //export the settings an env variables
-            foreach(var c in config.AsEnumerable())
+            try
             {
-                if(!string.IsNullOrEmpty(c.Value))
-                 Environment.SetEnvironmentVariable(c.Key,c.Value);
+                var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+                config = builder.Build();
+
+                //export the settings an env variables
+                foreach (var c in config.AsEnumerable())
+                {
+                    if (!string.IsNullOrEmpty(c.Value))
+                        Environment.SetEnvironmentVariable(c.Key, c.Value);
+
+                }
 
             }
-
+            catch(Exception e)
+            {
+                U.log("Error configuring",e);
+            }
 
 
 
