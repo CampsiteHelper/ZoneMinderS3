@@ -47,7 +47,7 @@ namespace ZMS3Sync
             // If you're using Amazon SES in a region other than US West (Oregon), 
             // replace email-smtp.us-west-2.amazonaws.com with the Amazon SES SMTP  
             // endpoint in the appropriate Region.
-            var HOST = U.config["AWS_SES_SMTP"];
+            var HOST = U.config["SMTP_SERVER_HOST"];
 
             // The port you will connect to on the Amazon SES SMTP endpoint. We
             // are choosing port 587 because we will use STARTTLS to encrypt

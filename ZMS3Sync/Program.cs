@@ -22,7 +22,7 @@ namespace ZMS3Sync
 
             ZoneMinderEvent.getEvents();
 
-            return 0;
+            return 99;
 
 
         }
