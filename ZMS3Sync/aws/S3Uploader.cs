@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
-using BrakePedal;
+
 
 
 namespace ZMS3Sync
@@ -19,27 +19,12 @@ namespace ZMS3Sync
         string bucket;
         Amazon.RegionEndpoint endPoint;
 
-        ThrottlePolicy uploadPolicy;
-        SimpleThrottleKey key;
-
+      
         public S3Uploader(string Region, string Bucket)
         {
 
           
-            uploadPolicy = new ThrottlePolicy()     // An empty constructor uses an in-memory repository
-            {
-                Name = "Upload Attempts",                // Give it a name so it can be used for logging purposes.
-                Prefixes = new[] { "upload:attempts" },  // Use prefixes to differentiate tracked keys for this policy from others.
-                                                        // It might make sense to get rid of this property and just use the Name property. 
-
-                // Set the limits for this policy. 
-                // We want to limit logins to 1 per second and 4 per minute.
-                PerSecond = 3,
-                PerMinute = 40
-            };
-
-            key = new SimpleThrottleKey("s3Upload");
-
+           
             endPoint = Amazon.RegionEndpoint.GetBySystemName(Region);
             bucket = Bucket;
             var maxConcur = U.config["MaxConcurrentUploads"] ?? "10";
@@ -151,14 +136,6 @@ namespace ZMS3Sync
         public void uploadFile(string filepath, string s3path)
         {
 
-
-            var check = uploadPolicy.Check(key);
-
-            if (check.IsThrottled)
-            {
-                U.log($"Thottled... ");
-                return;
-            }
 
             var fname = Path.GetFileName(filepath);
 
