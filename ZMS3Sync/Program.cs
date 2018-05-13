@@ -12,16 +12,7 @@ namespace ZMS3Sync
             RateLimiter rl = new RateLimiter();
 
 
-            rl.addLimit("Hello", 5);
-
-            while(true)
-            {
-                System.Threading.Thread.Sleep(1000);
-                Console.WriteLine($"{rl.checkRate("Hello")} - {DateTime.Now}");
-            }
-
-            Console.ReadLine();
-
+           
 
       
             U.log("Starting up and getting configuration");
