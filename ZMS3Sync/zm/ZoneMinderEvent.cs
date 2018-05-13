@@ -53,19 +53,20 @@ namespace ZMS3Sync
              
                 while (true)
                 {
-                    if(connReader.State!=System.Data.ConnectionState.Open)
-                    {
-                        connReader.Open();
-                    }
-
-                    if (connWriter.State != System.Data.ConnectionState.Open)
-                    {
-                        connWriter.Open();
-                    }
+					
 
 
                     try
                     {
+						if (connReader.State != System.Data.ConnectionState.Open)
+                        {
+                            connReader.Open();
+                        }
+
+                        if (connWriter.State != System.Data.ConnectionState.Open)
+                        {
+                            connWriter.Open();
+                        }
                         MySqlCommand cmd = new MySqlCommand(U.config["ZMQuery"], connReader);
                         //occassionally write out that we're running..
                         if ((DateTime.Now - lastNotifyTime).TotalSeconds > 120)
@@ -124,6 +125,7 @@ namespace ZMS3Sync
                     catch(Exception e)
                     {
                         U.log("Error in outer loop",e);
+
                         
                     }
                     System.Threading.Thread.Sleep(sleepMs);
