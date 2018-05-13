@@ -20,6 +20,11 @@ namespace ZMS3Sync
         {
         }
 
+		public RateLimiter( string LimitName, int countPerMinute)
+		{
+			addLimit(LimitName, countPerMinute);
+
+		}
         public bool checkRate(string LimitName)
         {
             addHit(LimitName);

@@ -19,6 +19,7 @@ namespace ZMS3Sync
         string bucket;
         Amazon.RegionEndpoint endPoint;
 
+		static RateLimiter rl = new RateLimiter("s3upload",30);
       
         public S3Uploader(string Region, string Bucket)
         {
@@ -137,6 +138,11 @@ namespace ZMS3Sync
         {
 
 
+			while(rl.checkRate("s3upload"))
+			{
+				System.Threading.Thread.Sleep(500);
+				
+			}
             var fname = Path.GetFileName(filepath);
 
 
